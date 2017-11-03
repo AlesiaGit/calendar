@@ -86,58 +86,78 @@ class createCalendar {
 				var note = data[0][key];
 				if (document.getElementById(elem.id)) {
 					document.getElementById(elem.id).innerHTML +=
-						'<div>\
+						'<div class="note">\
 					<div class="note__text" id="' +
 						key +
 						'">' +
 						note +
-						"</div>\
-					<button>x</button>\
-					</div>";
+						'</div>\
+					<a class="note__delete"></a>\
+					</div>';
 				}
 			}
 		});
 	}
 
 	addNote(calendarId, event) {
-		var d = new Date();
 		var table = document.getElementById("calendar");
 		var target = event.target;
 		var parent = target.parentNode;
 
 		while (
 			target !== table &&
-			target.innerHTML !== "" &&
 			target.className !==
 				"calendar__table-cell calendar__table-cell-empty"
 		) {
-			if (target.tagName === "BUTTON") {
+			if (target.className === "note__delete") {
 				return;
 			}
 
 			if (target.tagName === "TD") {
-				var note = prompt("Add text note here:");
-
-				if (note) {
-					var noteId = d.getTime();
-					var cellId = target.id;
-
-					target.innerHTML +=
-						'<div>\
-					<div class="note__text" id="' +
-						noteId +
-						'">' +
-						note +
-						"</div>\
-					<button>x</button>\
-					</div>";
-
-					this.saveNoteToStorage(note, noteId, cellId, calendarId);
-					return;
-				}
+				this.callNoteForm(target, calendarId);
 			}
 
 			target = target.parentNode;
+		}
+	}
+
+	callNoteForm(target, calendarId) {
+		new noteForm();
+		document
+			.getElementById("note-form-submit")
+			.addEventListener(
+				"click",
+				this.getUserInput.bind(this, target, calendarId)
+			);
+	}
+
+	deleteNoteForm() {
+		var note = document.getElementsByClassName("note-form")[0];
+		note.parentNode.removeChild(note);
+	}
+
+	getUserInput(target, calendarId) {
+		var note = document.getElementById("note-form-text").value;
+
+		if (note) {
+			var d = new Date();
+			var noteId = d.getTime();
+			var cellId = target.id;
+
+			target.innerHTML +=
+				'<div class="note">\
+			<div class="note__text" id="' +
+				noteId +
+				'">' +
+				note +
+				'</div>\
+			<a class="note__delete"></a>\
+			</div>';
+
+			this.saveNoteToStorage(note, noteId, cellId, calendarId);
+			this.deleteNoteForm();
+		} else {
+			this.deleteNoteForm();
 		}
 	}
 
@@ -146,8 +166,8 @@ class createCalendar {
 		var target = event.target;
 		var parent = target.parentNode;
 
-		while (target !== table && target.innerHTML !== "") {
-			if (target.tagName === "BUTTON") {
+		while (target !== table) {
+			if (target.className === "note__delete") {
 				var cellId = parent.parentNode.id;
 				var noteId = parent.getElementsByClassName("note__text")[0].id;
 				var arr = JSON.parse(localStorage.getItem(cellId)) || [];

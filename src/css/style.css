@@ -3,6 +3,10 @@ body {
 	font-size: 14px;
 }
 
+.root {
+	position: relative;
+}
+
 .links__wrapper {
 	width: 100%;
 	display: flex;
@@ -17,7 +21,6 @@ body {
 
 .preview__wrapper {
 	width: 100%;
-	//width: 800px;
 	display: flex;
 	flex-flow: row nowrap;
 	padding-bottom: 30px;
@@ -202,5 +205,76 @@ body {
 .settings__input-field:focus,
 .settings__input-field:active {
 	outline: none;
+}
+
+
+/*note*/
+.note-form {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.note-form__buttons-wrapper {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+}
+
+.note-form__btn {
+	height: 20px;
+    margin: 15px 5px;
+    border: 1px solid #e7e8e9;
+    padding: 6px 16px;
+    border-radius: 10px;
+}
+
+.note-form__btn-save {
+	background-color: #f3e3f0;
+}
+
+.note-form__btn-cancel {
+	background-color: #e7e8e9;
+}
+
+.note-form__input-field {
+	width: 90%;
+	font-family: 'Lato', sans-serif;
+    margin-top: 15px;
+    resize: none;
+    background-color: rgba(218, 223, 232, 0.5);
+    outline: none;
+    border-color: #e7e8e9;
+}
+
+.note {
+	display: flex;
+	justify-content: space-between;
+}
+
+.note__delete {
+	position: relative;
+	min-width: 24px;
+	width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.note__delete:after {
+	position: absolute;
+    content: "";
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background: url(../img/close-btn.png);
+    background-size: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
