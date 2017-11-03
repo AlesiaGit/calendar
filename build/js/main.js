@@ -1,7 +1,5 @@
 class calendarPreview {
-
 	constructor(settings) {
-
 		var d = new Date();
 		var leftRuler = settings.rulers === true ? "<" : "";
 		var rightRuler = settings.rulers === true ? ">" : "";
@@ -9,28 +7,28 @@ class calendarPreview {
 		var year = parseInt(settings.year);
 		var calendar = this.buildCalendar(year, month, settings.id);
 
-		var monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-		document.getElementById('calendar-preview').innerHTML = '<div class="calendar__header">\
+		document.getElementById("calendar-preview").innerHTML = '<div class="calendar__header">\
 		<div class="calendar__ruler" id="left-ruler">' + leftRuler + '</div>\
 		<div class="calendar__title" id="current-month">' + monthName[month] + '</div>\
 		<div class="calendar__ruler" id="right-ruler">' + rightRuler + '</div>\
 		</div>\
-		<div class="calendar" id="calendar">' + calendar + '</div>';
+		<div class="calendar" id="calendar">' + calendar + "</div>";
 
 		this.fillCalendarWithNotes(settings.id);
 
 		if (settings.addTasks === true) {
-			document.getElementById('calendar').addEventListener('click', this.addNote.bind(this, settings.id));
+			document.getElementById("calendar").addEventListener("click", this.addNote.bind(this, settings.id));
 		}
 
 		if (settings.removeTasks === true) {
-			document.getElementById('calendar').addEventListener('click', this.removeNote.bind(this, settings.id));
+			document.getElementById("calendar").addEventListener("click", this.removeNote.bind(this, settings.id));
 		}
 
 		if (settings.rulers === true) {
-			document.getElementById('left-ruler').addEventListener('click', this.prevMonth.bind(this, settings));
-			document.getElementById('right-ruler').addEventListener('click', this.nextMonth.bind(this, settings));
+			document.getElementById("left-ruler").addEventListener("click", this.prevMonth.bind(this, settings));
+			document.getElementById("right-ruler").addEventListener("click", this.nextMonth.bind(this, settings));
 		}
 	}
 
@@ -44,9 +42,9 @@ class calendarPreview {
 				var note = data[0][key];
 				if (document.getElementById(elem.id)) {
 					document.getElementById(elem.id).innerHTML += '<div>\
-					<div class="note__text" id="' + key + '">' + note + '</div>\
+					<div class="note__text" id="' + key + '">' + note + "</div>\
 					<button>x</button>\
-					</div>';
+					</div>";
 				}
 			}
 		});
@@ -54,26 +52,26 @@ class calendarPreview {
 
 	addNote(calendarId, event) {
 		var d = new Date();
-		var table = document.getElementById('calendar');
+		var table = document.getElementById("calendar");
 		var target = event.target;
 		var parent = target.parentNode;
 
-		while (target !== table && target.innerHTML !== '' && target.className !== "calendar__table-cell calendar__table-cell-empty") {
-			if (target.tagName === 'BUTTON') {
+		while (target !== table && target.innerHTML !== "" && target.className !== "calendar__table-cell calendar__table-cell-empty") {
+			if (target.tagName === "BUTTON") {
 				return;
 			}
 
-			if (target.tagName === 'TD') {
-				var note = prompt('Add text note here:');
+			if (target.tagName === "TD") {
+				var note = prompt("Add text note here:");
 
 				if (note) {
 					var noteId = d.getTime();
 					var cellId = target.id;
 
 					target.innerHTML += '<div>\
-					<div class="note__text" id="' + noteId + '">' + note + '</div>\
+					<div class="note__text" id="' + noteId + '">' + note + "</div>\
 					<button>x</button>\
-					</div>';
+					</div>";
 
 					this.saveNoteToStorage(note, noteId, cellId, calendarId);
 					return;
@@ -85,15 +83,14 @@ class calendarPreview {
 	}
 
 	removeNote(calendarId, event) {
-		var table = document.getElementById('calendar');
+		var table = document.getElementById("calendar");
 		var target = event.target;
 		var parent = target.parentNode;
 
-		while (target !== table && target.innerHTML !== '') {
-
-			if (target.tagName === 'BUTTON') {
+		while (target !== table && target.innerHTML !== "") {
+			if (target.tagName === "BUTTON") {
 				var cellId = parent.parentNode.id;
-				var noteId = parent.getElementsByClassName('note__text')[0].id;
+				var noteId = parent.getElementsByClassName("note__text")[0].id;
 				var arr = JSON.parse(localStorage.getItem(cellId)) || [];
 
 				arr = arr.filter(function (elem) {
@@ -142,18 +139,18 @@ class calendarPreview {
 		if (this.fixDays(d.getDay()) > 1) {
 			for (var i = 1; i < this.fixDays(d.getDay()); i++) {
 				table += '<td class="calendar__table-cell calendar__table-cell-empty">\
-				<div class="date">' + " " + '</div>\
-				</td>';
+				<div class="date">' + " " + "</div>\
+				</td>";
 			}
 		}
 
 		for (var i = 1; i <= n.getDate(); i++) {
-			table += '<td class="calendar__table-cell" id=' + calendarId + ':' + d.getTime() + '>\
-			<div class="date">' + i + '</div>\
-			</td>';
+			table += '<td class="calendar__table-cell" id=' + calendarId + ":" + d.getTime() + '>\
+			<div class="date">' + i + "</div>\
+			</td>";
 
 			if (this.fixDays(d.getDay()) == 7) {
-				table += '</tr><tr>';
+				table += "</tr><tr>";
 			}
 			d.setDate(d.getDate() + 1);
 		}
@@ -161,12 +158,12 @@ class calendarPreview {
 		if (this.fixDays(n.getDay()) < 7) {
 			for (var i = this.fixDays(n.getDay()); i < 7; i++) {
 				table += '<td class="calendar__table-cell calendar__table-cell-empty">\
-				<div class="date">' + " " + '</div>\
-				</td>';
+				<div class="date">' + " " + "</div>\
+				</td>";
 			}
 		}
 
-		return table + '</tr></table>';
+		return table + "</tr></table>";
 	}
 
 	nextMonth(settings) {
@@ -186,20 +183,11 @@ class calendarPreview {
 		settings.month = month;
 		new calendarPreview(settings);
 	}
-
 }
 
 class createCalendar {
-
 	constructor(id) {
-
-		var arr = JSON.parse(localStorage.getItem(id)) || [];
-		arr = arr.filter(function (elem) {
-			return elem.id === id;
-		});
-
-		var settings = arr[0];
-		console.log(settings);
+		var settings = JSON.parse(localStorage.getItem(id)) || [];
 
 		var d = new Date();
 		var leftRuler = settings.rulers === true ? "<" : "";
@@ -208,28 +196,28 @@ class createCalendar {
 		var year = parseInt(settings.year);
 		var calendar = this.buildCalendar(year, month, settings.id);
 
-		var monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-		document.getElementById('root').innerHTML = '<div class="calendar__header">\
-		<div class="calendar__ruler" id="left-ruler">' + leftRuler + '</div>\
-		<div class="calendar__title" id="current-month">' + monthName[month] + '</div>\
-		<div class="calendar__ruler" id="right-ruler">' + rightRuler + '</div>\
-		</div>\
-		<div class="calendar" id="calendar">' + calendar + '</div>';
+		document.getElementById("root").innerHTML = '<div class="calendar__header">\
+				<div class="calendar__ruler" id="left-ruler">' + leftRuler + '</div>\
+				<div class="calendar__title" id="current-month">' + monthName[month] + '</div>\
+				<div class="calendar__ruler" id="right-ruler">' + rightRuler + '</div>\
+			</div>\
+			<div class="calendar" id="calendar">' + calendar + "</div>";
 
 		this.fillCalendarWithNotes(settings.id);
 
 		if (settings.addTasks === true) {
-			document.getElementById('calendar').addEventListener('click', this.addNote.bind(this, settings.id));
+			document.getElementById("calendar").addEventListener("click", this.addNote.bind(this, settings.id));
 		}
 
 		if (settings.removeTasks === true) {
-			document.getElementById('calendar').addEventListener('click', this.removeNote.bind(this, settings.id));
+			document.getElementById("calendar").addEventListener("click", this.removeNote.bind(this, settings.id));
 		}
 
 		if (settings.rulers === true) {
-			document.getElementById('left-ruler').addEventListener('click', this.prevMonth.bind(this, settings.id));
-			document.getElementById('right-ruler').addEventListener('click', this.nextMonth.bind(this, settings.id));
+			document.getElementById("left-ruler").addEventListener("click", this.prevMonth.bind(this, settings.id));
+			document.getElementById("right-ruler").addEventListener("click", this.nextMonth.bind(this, settings.id));
 		}
 	}
 
@@ -243,9 +231,9 @@ class createCalendar {
 				var note = data[0][key];
 				if (document.getElementById(elem.id)) {
 					document.getElementById(elem.id).innerHTML += '<div>\
-					<div class="note__text" id="' + key + '">' + note + '</div>\
+					<div class="note__text" id="' + key + '">' + note + "</div>\
 					<button>x</button>\
-					</div>';
+					</div>";
 				}
 			}
 		});
@@ -253,26 +241,26 @@ class createCalendar {
 
 	addNote(calendarId, event) {
 		var d = new Date();
-		var table = document.getElementById('calendar');
+		var table = document.getElementById("calendar");
 		var target = event.target;
 		var parent = target.parentNode;
 
-		while (target !== table && target.innerHTML !== '' && target.className !== "calendar__table-cell calendar__table-cell-empty") {
-			if (target.tagName === 'BUTTON') {
+		while (target !== table && target.innerHTML !== "" && target.className !== "calendar__table-cell calendar__table-cell-empty") {
+			if (target.tagName === "BUTTON") {
 				return;
 			}
 
-			if (target.tagName === 'TD') {
-				var note = prompt('Add text note here:');
+			if (target.tagName === "TD") {
+				var note = prompt("Add text note here:");
 
 				if (note) {
 					var noteId = d.getTime();
 					var cellId = target.id;
 
 					target.innerHTML += '<div>\
-					<div class="note__text" id="' + noteId + '">' + note + '</div>\
+					<div class="note__text" id="' + noteId + '">' + note + "</div>\
 					<button>x</button>\
-					</div>';
+					</div>";
 
 					this.saveNoteToStorage(note, noteId, cellId, calendarId);
 					return;
@@ -284,15 +272,14 @@ class createCalendar {
 	}
 
 	removeNote(calendarId, event) {
-		var table = document.getElementById('calendar');
+		var table = document.getElementById("calendar");
 		var target = event.target;
 		var parent = target.parentNode;
 
-		while (target !== table && target.innerHTML !== '') {
-
-			if (target.tagName === 'BUTTON') {
+		while (target !== table && target.innerHTML !== "") {
+			if (target.tagName === "BUTTON") {
 				var cellId = parent.parentNode.id;
-				var noteId = parent.getElementsByClassName('note__text')[0].id;
+				var noteId = parent.getElementsByClassName("note__text")[0].id;
 				var arr = JSON.parse(localStorage.getItem(cellId)) || [];
 
 				arr = arr.filter(function (elem) {
@@ -341,18 +328,18 @@ class createCalendar {
 		if (this.fixDays(d.getDay()) > 1) {
 			for (var i = 1; i < this.fixDays(d.getDay()); i++) {
 				table += '<td class="calendar__table-cell calendar__table-cell-empty">\
-				<div class="date">' + " " + '</div>\
-				</td>';
+				<div class="date">' + " " + "</div>\
+				</td>";
 			}
 		}
 
 		for (var i = 1; i <= n.getDate(); i++) {
-			table += '<td class="calendar__table-cell" id=' + calendarId + ':' + d.getTime() + '>\
-			<div class="date">' + i + '</div>\
-			</td>';
+			table += '<td class="calendar__table-cell" id=' + calendarId + ":" + d.getTime() + '>\
+			<div class="date">' + i + "</div>\
+			</td>";
 
 			if (this.fixDays(d.getDay()) == 7) {
-				table += '</tr><tr>';
+				table += "</tr><tr>";
 			}
 			d.setDate(d.getDate() + 1);
 		}
@@ -360,46 +347,28 @@ class createCalendar {
 		if (this.fixDays(n.getDay()) < 7) {
 			for (var i = this.fixDays(n.getDay()); i < 7; i++) {
 				table += '<td class="calendar__table-cell calendar__table-cell-empty">\
-				<div class="date">' + " " + '</div>\
-				</td>';
+				<div class="date">' + " " + "</div>\
+				</td>";
 			}
 		}
 
-		return table + '</tr></table>';
-	}
-
-	hashIdToSettings(id) {
-		var arr = JSON.parse(localStorage.getItem(id)) || [];
-		arr = arr.filter(function (elem) {
-			return elem.id === id;
-		});
-
-		console.log(id);
-
-		return arr[0];
+		return table + "</tr></table>";
 	}
 
 	nextMonth(id) {
-		var arr = JSON.parse(localStorage.getItem(id)) || [];
-		arr = arr.filter(function (elem) {
-			return elem.id === id;
-		});
-
-		var settings = arr[0];
+		var settings = JSON.parse(localStorage.getItem(id)) || [];
 
 		var month = parseInt(settings.month);
 		month = (month + 1) % 12;
 		settings.month = month;
-		new createCalendar(settings);
+
+		localStorage.setItem(id, JSON.stringify(settings));
+
+		new createCalendar(id);
 	}
 
 	prevMonth(id) {
-		var arr = JSON.parse(localStorage.getItem(id)) || [];
-		arr = arr.filter(function (elem) {
-			return elem.id === id;
-		});
-
-		var settings = arr[0];
+		var settings = JSON.parse(localStorage.getItem(id)) || [];
 
 		var month = parseInt(settings.month);
 		if (--month < 0) {
@@ -408,9 +377,11 @@ class createCalendar {
 			month = month;
 		}
 		settings.month = month;
-		new createCalendar(settings);
-	}
 
+		localStorage.setItem(id, JSON.stringify(settings));
+
+		new createCalendar(id);
+	}
 }
 
 function EventBus() {
@@ -498,118 +469,91 @@ Router.prototype = {
 };
 
 class settingsPreview {
-
 	constructor(settings) {
-
-		document.getElementById('settings-preview').innerHTML = '<pre><code></br>\
+		document.getElementById("settings-preview").innerHTML = "<pre><code></br>\
 		&lt;script&gt;<br/>\
 			new calendarPreview ({<br/>\
-				id:' + settings.id + ',<br/>\
-				month:' + settings.month + ',<br/>\
-				year:' + settings.year + ',<br/>\
-				addTasks:' + settings.addTasks + ',<br/>\
-				removeTasks:' + settings.removeTasks + ',<br/>\
-				rulers:' + settings.rulers + ',<br/>\
+				id:" + settings.id + ",<br/>\
+				month:" + settings.month + ",<br/>\
+				year:" + settings.year + ",<br/>\
+				addTasks:" + settings.addTasks + ",<br/>\
+				removeTasks:" + settings.removeTasks + ",<br/>\
+				rulers:" + settings.rulers + ",<br/>\
 			});<br/>\
-		&lt;/script&gt;</code></pre>';
+		&lt;/script&gt;</code></pre>";
 	}
 }
+
 class showSettings {
-
 	constructor() {
-		document.getElementById('root').innerHTML = '';
+		document.getElementById("root").innerHTML = "";
 
-		this.settings = document.createElement('DIV');
+		this.settings = document.createElement("DIV");
 		this.settings.className = "settings";
 		this.settings.innerHTML = '<div class="links__wrapper">\
-		<a id="settings" class="calendar__btn" href="/">Settings</a>\
-		<span class="divider">|</span>\
-		<a id="calendar" class="calendar__btn" href="">Calendar</a>\
-		</div>\
-		<div class="settings__form form" id="settings-form">\
-		<p class="settings__title">Configure calendar</p>\
-		<label class="form-item"><input class="settings__checkbox" type="checkbox" id="rulers" name="rulers">allow to change month</label>\
-		<label class="form-item"><input class="settings__checkbox" type="checkbox" id="add-tasks" name="add-tasks">allow to add tasks</label>\
-		<label class="form-item"><input class="settings__checkbox" type="checkbox" id="remove-tasks" name="remove-tasks">allow to remove tasks</label>\
-		<label class="form-item"><select id="month" class="settings__select" name="month"></select>select month</label>\
-		<label class="form-item"><select id="year" class="settings__select" name="year"></select>select year</label>\
-		</div>\
-		<div class="preview__wrapper">\
-		<div class="preview__settings" id="settings-preview"></div>\
-		<div class="preview__calendar" id="calendar-preview"></div>\
-		</div>';
+				<a id="settings" class="calendar__btn" href="/">Settings</a>\
+				<span class="divider">|</span>\
+				<a id="calendar" class="calendar__btn" href="">Calendar</a>\
+			</div>\
+			<div class="settings__form form" id="settings-form">\
+				<p class="settings__title">Configure calendar</p>\
+				<label class="form-item"><input class="settings__checkbox" type="checkbox" id="rulers" name="rulers">allow to change month</label>\
+				<label class="form-item"><input class="settings__checkbox" type="checkbox" id="add-tasks" name="add-tasks">allow to add tasks</label>\
+				<label class="form-item"><input class="settings__checkbox" type="checkbox" id="remove-tasks" name="remove-tasks">allow to remove tasks</label>\
+				<label class="form-item"><select id="month" class="settings__select" name="month"></select>select month</label>\
+				<label class="form-item"><select id="year" class="settings__select" name="year"></select>select year</label>\
+			</div>\
+			<div class="preview__wrapper">\
+				<div class="preview__settings" id="settings-preview"></div>\
+				<div class="preview__calendar" id="calendar-preview"></div>\
+			</div>';
 
-		document.getElementById('root').appendChild(this.settings);
+		document.getElementById("root").appendChild(this.settings);
 
 		this.fillMonthInput();
 		this.fillYearInput();
 
 		var d = new Date();
 
-		document.getElementsByClassName('month-option')[d.getMonth()].selected = true;
-		document.getElementsByClassName('year-option')[d.getFullYear() - 2010].selected = true;
+		document.getElementsByClassName("month-option")[d.getMonth()].selected = true;
+		document.getElementsByClassName("year-option")[d.getFullYear() - 2010].selected = true;
 
-		document.getElementById('settings-form').addEventListener('change', this.initCalendar.bind(this));
+		document.getElementById("settings-form").addEventListener("change", this.initCalendar.bind(this));
 	}
 
 	fillMonthInput() {
-		var monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 		for (var i = 0; i < 12; i++) {
-			document.getElementById("month").innerHTML += '<option class="month-option" value="' + i + '">' + monthName[i] + '</option>';
+			document.getElementById("month").innerHTML += '<option class="month-option" value="' + i + '">' + monthName[i] + "</option>";
 		}
 	}
 
 	fillYearInput() {
 		for (var i = 0; i < 10; i++) {
-			document.getElementById("year").innerHTML += '<option class="year-option" value="' + (2010 + i) + '">' + (2010 + i) + '</option>';
+			document.getElementById("year").innerHTML += '<option class="year-option" value="' + (2010 + i) + '">' + (2010 + i) + "</option>";
 		}
 	}
 
 	initCalendar() {
-
 		var d = new Date();
 
 		var settings = {
-			id: 'c' + Math.floor(Math.random() * 1),
-			month: document.getElementById('month').value || d.getMonth(),
-			year: document.getElementById('year').value || d.getFullYear(),
-			addTasks: document.getElementById('add-tasks').checked,
-			removeTasks: document.getElementById('remove-tasks').checked,
-			rulers: document.getElementById('rulers').checked
+			id: "c" + Math.floor(Math.random() * 3),
+			month: document.getElementById("month").value || d.getMonth(),
+			year: document.getElementById("year").value || d.getFullYear(),
+			addTasks: document.getElementById("add-tasks").checked,
+			removeTasks: document.getElementById("remove-tasks").checked,
+			rulers: document.getElementById("rulers").checked
 		};
 
 		var id = settings.id;
 
-		var arr = JSON.parse(localStorage.getItem(id)) || [];
-		arr = arr.filter(function (elem) {
-			return elem.id !== id;
-		});
-		arr.push(settings);
-		localStorage.setItem(id, JSON.stringify(arr));
+		localStorage.setItem(id, JSON.stringify(settings));
 
-		document.getElementById('calendar').hash = '#calendar-' + settings.id;
+		document.getElementById("calendar").href = "#calendar-" + id;
 
 		new calendarPreview(settings);
 		new settingsPreview(settings);
-
-		document.getElementById('calendar').addEventListener('click', new createCalendar());
-
-		//eventBus.trigger('create-calendar', {title: this.addTitle, rulers: this.addRulers, notes: this.addNotes});
 	}
-
-	/*showCalendar(id, event) {
- 
- 	var arr = JSON.parse(localStorage.getItem(id)) || [];
- 	arr = arr.filter(function(elem) {
- 	 	return elem.id === id;
- 	});
- 
- 	//console.log(arr);
- 
- 	new createCalendar();
- 	
- 	//eventBus.trigger('create-calendar', {title: this.addTitle, rulers: this.addRulers, notes: this.addNotes});
- 
- }	*/
 }
