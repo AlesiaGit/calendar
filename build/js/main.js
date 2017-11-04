@@ -15,112 +15,6 @@ class calendarPreview {
 		<div class="calendar__ruler" id="right-ruler">' + rightRuler + '</div>\
 		</div>\
 		<div class="calendar" id="calendar">' + calendar + "</div>";
-
-		this.fillCalendarWithNotes(settings.id);
-
-		if (settings.addTasks === true) {
-			document.getElementById("calendar").addEventListener("click", this.addNote.bind(this, settings.id));
-		}
-
-		if (settings.removeTasks === true) {
-			document.getElementById("calendar").addEventListener("click", this.removeNote.bind(this, settings.id));
-		}
-
-		if (settings.rulers === true) {
-			document.getElementById("left-ruler").addEventListener("click", this.prevMonth.bind(this, settings));
-			document.getElementById("right-ruler").addEventListener("click", this.nextMonth.bind(this, settings));
-		}
-	}
-
-	fillCalendarWithNotes(calendarId) {
-		var cells = document.getElementsByClassName("calendar__table-cell");
-
-		cells = Array.prototype.filter.call(cells, function (elem) {
-			var data = JSON.parse(localStorage.getItem(elem.id));
-			if (data !== null) {
-				var key = Object.keys(data[0])[0];
-				var note = data[0][key];
-				if (document.getElementById(elem.id)) {
-					document.getElementById(elem.id).innerHTML += '<div>\
-					<div class="note__text" id="' + key + '">' + note + "</div>\
-					<button>x</button>\
-					</div>";
-				}
-			}
-		});
-	}
-
-	addNote(calendarId, event) {
-		var d = new Date();
-		var table = document.getElementById("calendar");
-		var target = event.target;
-		var parent = target.parentNode;
-
-		while (target !== table && target.innerHTML !== "" && target.className !== "calendar__table-cell calendar__table-cell-empty") {
-			if (target.tagName === "BUTTON") {
-				return;
-			}
-
-			if (target.tagName === "TD") {
-				var note = prompt("Add text note here:");
-
-				if (note) {
-					var noteId = d.getTime();
-					var cellId = target.id;
-
-					target.innerHTML += '<div>\
-					<div class="note__text" id="' + noteId + '">' + note + "</div>\
-					<button>x</button>\
-					</div>";
-
-					this.saveNoteToStorage(note, noteId, cellId, calendarId);
-					return;
-				}
-			}
-
-			target = target.parentNode;
-		}
-	}
-
-	removeNote(calendarId, event) {
-		var table = document.getElementById("calendar");
-		var target = event.target;
-		var parent = target.parentNode;
-
-		while (target !== table && target.innerHTML !== "") {
-			if (target.tagName === "BUTTON") {
-				var cellId = parent.parentNode.id;
-				var noteId = parent.getElementsByClassName("note__text")[0].id;
-				var arr = JSON.parse(localStorage.getItem(cellId)) || [];
-
-				arr = arr.filter(function (elem) {
-					return Object.keys(elem)[0] !== noteId;
-				});
-
-				if (arr.length === 0) {
-					localStorage.removeItem(cellId);
-					parent.parentNode.removeChild(parent);
-					return;
-				}
-
-				localStorage.setItem(cellId, JSON.stringify(arr));
-				parent.parentNode.removeChild(parent);
-
-				return;
-			}
-
-			target = target.parentNode;
-		}
-	}
-
-	saveNoteToStorage(noteText, noteId, cellId, calendarId) {
-		var arr = JSON.parse(localStorage.getItem(cellId)) || [];
-
-		var note = {};
-		note[noteId] = noteText;
-		arr.push(note);
-
-		localStorage.setItem(cellId, JSON.stringify(arr));
 	}
 
 	fixDays(weekday) {
@@ -164,24 +58,6 @@ class calendarPreview {
 		}
 
 		return table + "</tr></table>";
-	}
-
-	nextMonth(settings) {
-		var month = parseInt(settings.month);
-		month = (month + 1) % 12;
-		settings.month = month;
-		new calendarPreview(settings);
-	}
-
-	prevMonth(settings) {
-		var month = parseInt(settings.month);
-		if (--month < 0) {
-			month = 11;
-		} else {
-			month = month;
-		}
-		settings.month = month;
-		new calendarPreview(settings);
 	}
 }
 
@@ -259,7 +135,10 @@ class createCalendar {
 
 	callNoteForm(target, calendarId) {
 		new noteForm();
+
 		document.getElementById("note-form-submit").addEventListener("click", this.getUserInput.bind(this, target, calendarId));
+
+		document.getElementById("note-form-cancel").addEventListener("click", this.deleteNoteForm.bind(this));
 	}
 
 	deleteNoteForm() {
@@ -440,17 +319,23 @@ EventBus.prototype = {
 
 class noteForm {
 	constructor() {
-
-		this.noteForm = document.createElement('DIV');
-		this.noteForm.className = 'note-form';
+		this.noteForm = document.createElement("DIV");
+		this.noteForm.className = "note-form";
 		this.noteForm.innerHTML = '<textarea rows="6" id="note-form-text" class="note-form__input-field" type="text" autofocus></textarea>\
 		<div class="note-form__buttons-wrapper">\
 			<a id="note-form-submit" class="note-form__btn note-form__btn-save">Save</a>\
 			<a id="note-form-cancel" class="note-form__btn note-form__btn-cancel">Cancel</a>\
 		</div>';
 		document.getElementById("root").appendChild(this.noteForm);
+
+		this.focusOnForm();
+	}
+
+	focusOnForm() {
+		document.getElementById("note-form-text").focus();
 	}
 }
+
 var Router = function (options) {
 	this.routes = options.routes || [];
 	this.eventBus = options.eventBus;

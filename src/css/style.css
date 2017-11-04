@@ -259,6 +259,11 @@ body {
 	justify-content: space-between;
 }
 
+.note__text {
+	text-align: left;
+    word-wrap: break-word;
+}
+
 .note__delete {
 	position: relative;
 	min-width: 24px;
