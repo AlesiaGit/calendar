@@ -135,7 +135,10 @@ class createCalendar {
 
 	callNoteForm(target, calendarId) {
 		new noteForm();
+
 		document.getElementById("note-form-submit").addEventListener("click", this.getUserInput.bind(this, target, calendarId));
+
+		document.getElementById("note-form-cancel").addEventListener("click", this.deleteNoteForm.bind(this));
 	}
 
 	deleteNoteForm() {
@@ -316,17 +319,23 @@ EventBus.prototype = {
 
 class noteForm {
 	constructor() {
-
-		this.noteForm = document.createElement('DIV');
-		this.noteForm.className = 'note-form';
+		this.noteForm = document.createElement("DIV");
+		this.noteForm.className = "note-form";
 		this.noteForm.innerHTML = '<textarea rows="6" id="note-form-text" class="note-form__input-field" type="text" autofocus></textarea>\
 		<div class="note-form__buttons-wrapper">\
 			<a id="note-form-submit" class="note-form__btn note-form__btn-save">Save</a>\
 			<a id="note-form-cancel" class="note-form__btn note-form__btn-cancel">Cancel</a>\
 		</div>';
 		document.getElementById("root").appendChild(this.noteForm);
+
+		this.focusOnForm();
+	}
+
+	focusOnForm() {
+		document.getElementById("note-form-text").focus();
 	}
 }
+
 var Router = function (options) {
 	this.routes = options.routes || [];
 	this.eventBus = options.eventBus;

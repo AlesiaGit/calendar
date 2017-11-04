@@ -123,12 +123,17 @@ class createCalendar {
 
 	callNoteForm(target, calendarId) {
 		new noteForm();
+
 		document
 			.getElementById("note-form-submit")
 			.addEventListener(
 				"click",
 				this.getUserInput.bind(this, target, calendarId)
 			);
+
+		document
+			.getElementById("note-form-cancel")
+			.addEventListener("click", this.deleteNoteForm.bind(this));
 	}
 
 	deleteNoteForm() {
